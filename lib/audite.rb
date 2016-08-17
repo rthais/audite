@@ -1,8 +1,6 @@
 require 'portaudio'
 require 'mpg123'
 
-trap('INT') { puts "\nClosing" ; exit }
-
 class Audite
   class Events
     def initialize
