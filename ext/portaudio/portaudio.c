@@ -232,6 +232,22 @@ VALUE rb_portaudio_stop(VALUE self)
   return self;
 }
 
+
+VALUE rb_portaudio_abort(VALUE self)
+{
+  Portaudio *portaudio;
+  Data_Get_Struct(self, Portaudio, portaudio);
+  int err = Pa_AbortStream(portaudio->stream);
+
+  pthread_cond_broadcast(&portaudio->cond);
+
+  if (err != paNoError) {
+    rb_raise(rb_eStandardError, "%s", Pa_GetErrorText(err));
+  }
+
+  return self;
+}
+
 VALUE rb_portaudio_stream_stopped(VALUE self)
 {
   Portaudio *portaudio;
@@ -280,4 +296,5 @@ void Init_portaudio(void) {
   rb_define_method(rb_cPortaudio, "write_from_mpg", rb_portaudio_write_from_mpg, 1);
   rb_define_method(rb_cPortaudio, "start", rb_portaudio_start, 0);
   rb_define_method(rb_cPortaudio, "stop", rb_portaudio_stop, 0);
+  rb_define_method(rb_cPortaudio, "abort", rb_portaudio_abort, 0);
 }
