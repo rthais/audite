@@ -89,8 +89,9 @@ class Audite
         events.trigger(:toggle, @active)
       end
       if @thread.alive?
+        current_thread = @thread
         @thread = nil
-        @thread.kill
+        current_thread.kill
       end
     end
   end
