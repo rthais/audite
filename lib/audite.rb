@@ -84,13 +84,13 @@ class Audite
   def stop_stream
     if @active
       @active = false
-      if @thread.alive?
-        @thread.kill
-        @thread = nil
-      end
       unless @stream.stopped?
         @stream.stop
         events.trigger(:toggle, @active)
+      end
+      if @thread.alive?
+        @thread = nil
+        @thread.kill
       end
     end
   end
